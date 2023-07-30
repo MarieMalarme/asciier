@@ -9,6 +9,16 @@
   display: none;
 }
 
+@font-face {
+  font-family: 'sans';
+  src: url('./px_grotesk_light.ttf');
+}
+
+@font-face {
+  font-family: 'mono';
+  src: url('./ibm_plex_mono_light.ttf');
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -19,14 +29,26 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-@font-face {
-  font-family: 'sans';
-  src: url('./px_grotesk_light.ttf');
+input[type='color'] {
+  -webkit-appearance: none;
+  border: none;
+  width: 15px;
+  height: 15px;
+  background: none;
+  cursor: pointer;
 }
 
-@font-face {
-  font-family: 'mono';
-  src: url('./ibm_plex_mono_light.ttf');
+input[type='color']:disabled {
+  cursor: default;
+}
+
+input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type='color']::-webkit-color-swatch {
+  border-radius: 50%;
+  border: solid 0.1px rgb(175, 175, 175);
 }
 
 .outline_button:focus {

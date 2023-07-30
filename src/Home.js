@@ -2,7 +2,7 @@ import { Fragment, useState, useEffect } from 'react'
 import { Component, Div } from './flags'
 import glitch from './grey_gradient.jpeg'
 
-export const Home = ({ color, is_selected }) => {
+export const Home = () => {
   const [canvas, set_canvas] = useState(null)
   const [wrapper, set_wrapper] = useState(null)
   const [image, set_image] = useState(glitch)
@@ -59,41 +59,36 @@ export const Home = ({ color, is_selected }) => {
   return (
     <Wrapper style={{ background: colors[0] }} elemRef={set_wrapper}>
       <ControlsPanel
-        is_selected={is_selected}
-        patterns={patterns}
-        set_patterns={set_patterns}
+        image={image}
+        set_image={set_image}
         colors={colors}
         set_colors={set_colors}
+        patterns={patterns}
+        set_patterns={set_patterns}
+        copy_text={copy_text}
+        set_copy_text={set_copy_text}
         patterns_per_line={patterns_per_line}
         set_patterns_per_line={set_patterns_per_line}
         multicolor_mode_on={multicolor_mode_on}
         set_multicolor_mode_on={set_multicolor_mode_on}
-        image={image}
-        set_image={set_image}
-        copy_text={copy_text}
-        set_copy_text={set_copy_text}
         set_canvas={set_canvas}
         ascii_lines={ascii_lines}
       />
 
       <Canvas none elemRef={set_canvas} width="0" height="0" />
 
-      <AsciiImage style={{ color: colors[1] }}>
+      <AsciiImage>
         {ascii_lines.map((line, index) => (
           <Line key={index}>
-            {line.map((pattern, index) => (
-              <Character
-                style={
-                  {
-                    // background: multicolor_mode_on ? pattern.background : '',
-                    // color: multicolor_mode_on ? pattern.color : '',
-                  }
-                }
-                key={index}
-              >
-                {pattern.character}
-              </Character>
-            ))}
+            {line.map((pattern, index) => {
+              const background = multicolor_mode_on ? pattern.background : ''
+              const color = multicolor_mode_on ? pattern.color : colors[1]
+              return (
+                <Character key={index} style={{ background, color }}>
+                  {pattern.character}
+                </Character>
+              )
+            })}
           </Line>
         ))}
       </AsciiImage>
@@ -106,7 +101,7 @@ const ControlsPanel = (props) => {
   const { multicolor_mode_on, set_multicolor_mode_on } = props
   const { patterns, set_patterns, ascii_lines } = props
   const { image, set_image, copy_text, set_copy_text } = props
-  const { colors, set_colors, is_selected } = props
+  const { colors, set_colors } = props
 
   const [is_open, set_is_open] = useState(false)
 
@@ -114,8 +109,7 @@ const ControlsPanel = (props) => {
     <Fragment>
       <Toggle
         onClick={() => set_is_open(!is_open)}
-        style={{ left: is_open ? 275 : 30 }}
-        // style={{ left: is_open ? 355 : 30 }}
+        style={{ left: is_open ? 355 : 30 }}
         pv10={!is_open}
         ph20={!is_open}
         fs15={is_open}
@@ -144,7 +138,7 @@ const ControlsPanel = (props) => {
             </Label>
           </Div>
 
-          {/*   <Div mt10 flex ai_center>
+          <Div mt10 flex ai_center>
             Multicolor mode
             <Div
               bb
@@ -168,9 +162,9 @@ const ControlsPanel = (props) => {
             >
               ON
             </Div>
-          </Div>*/}
+          </Div>
 
-          {/*<ColorsInputs flex w100p jc_between mb5 mt10>
+          <ColorsInputs flex w100p jc_between mb5 mt10>
             <Div flex ai_center>
               Background color
               <ColorInput
@@ -180,6 +174,23 @@ const ControlsPanel = (props) => {
                 onInput={(event) => set_colors([event.target.value, colors[1]])}
               />
             </Div>
+            <Svg
+              width={12}
+              viewBox="0 0 160 200"
+              xmlns="http://www.w3.org/2000/svg"
+              o25={multicolor_mode_on}
+              c_pointer={multicolor_mode_on}
+              onClick={() =>
+                !multicolor_mode_on && set_colors([colors[1], colors[0]])
+              }
+            >
+              <path
+                fill="none"
+                stroke="black"
+                strokeWidth={8.5}
+                d="m101.6 101.85 47.65 47.65-47.65 47.65M10.75 149.5h137.84M57.9 98.15 10.25 50.5 57.9 2.85M149.75 50.5H10.91"
+              />
+            </Svg>
             <Div o25={multicolor_mode_on} flex ai_center>
               Characters color
               <ColorInput
@@ -187,10 +198,11 @@ const ControlsPanel = (props) => {
                 type="color"
                 value={colors[1]}
                 disabled={multicolor_mode_on}
+                f_saturate0={multicolor_mode_on}
                 onInput={(event) => set_colors([colors[0], event.target.value])}
               />
             </Div>
-          </ColorsInputs>*/}
+          </ColorsInputs>
 
           <Parameter
             type="number"
@@ -233,7 +245,7 @@ const ControlsPanel = (props) => {
 
           <AddButton
             onClick={() => {
-              const random_index = random(0, ascii_characters.length)
+              const random_index = random(0, ascii_characters.length - 1)
               const character = ascii_characters.at(random_index)
               const background = get_random_hex_color()
               const color = get_random_hex_color()
@@ -296,8 +308,12 @@ const Parameter = ({ original_value, set_value, label, ...props }) => {
         {label}
       </Div>
 
-      {/*      {is_pattern_value && (
-        <ColorsInputs o25={!props.multicolor_mode_on} relative>
+      {is_pattern_value && (
+        <ColorsInputs
+          relative
+          o25={!multicolor_mode_on}
+          f_saturate0={!multicolor_mode_on}
+        >
           <Letter
             grey2={original_value.color === 'transparent'}
             white={original_value.color !== 'transparent'}
@@ -307,6 +323,7 @@ const Parameter = ({ original_value, set_value, label, ...props }) => {
           <ColorInput
             mr3
             type="color"
+            disabled={!multicolor_mode_on}
             onInput={(event) => set_value(event.target.value, 'color')}
             value={
               original_value.color === 'transparent'
@@ -314,11 +331,17 @@ const Parameter = ({ original_value, set_value, label, ...props }) => {
                 : original_value.color
             }
           />
-          <Circle onClick={() => set_value('transparent', 'color')} />
+          <Circle
+            c_pointer={multicolor_mode_on}
+            onClick={() =>
+              multicolor_mode_on && set_value('transparent', 'color')
+            }
+          />
 
           <ColorInput
             mr3
             type="color"
+            disabled={!multicolor_mode_on}
             onInput={(event) => set_value(event.target.value, 'background')}
             value={
               original_value.background === 'transparent'
@@ -326,9 +349,14 @@ const Parameter = ({ original_value, set_value, label, ...props }) => {
                 : original_value.background
             }
           />
-          <Circle onClick={() => set_value('transparent', 'background')} />
+          <Circle
+            c_pointer={multicolor_mode_on}
+            onClick={() =>
+              multicolor_mode_on && set_value('transparent', 'background')
+            }
+          />
         </ColorsInputs>
-      )}*/}
+      )}
 
       {remove_pattern && (
         <RemoveButton onClick={remove_pattern}>-</RemoveButton>
@@ -343,11 +371,12 @@ const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-const get_random_hex_color = () =>
-  `#${Math.floor(Math.random() * 16777215).toString(16)}`
+const get_random_hex_color = () => {
+  const random_color = Math.floor(Math.random() * 16777215).toString(16)
+  return `#${random_color.padEnd(6, 0)}`
+}
 
-const base_colors = ['white', 'black']
-// const base_colors = [get_random_hex_color(), get_random_hex_color()]
+const base_colors = [get_random_hex_color(), get_random_hex_color()]
 const ascii_characters = `~!@#$%^&*()_-+={}[]|\\'":;?/,.><o0`
 const base_characters = ['+', '{', '//', '0', '#', '@', 'A', 'mmm', '88']
 const base_patterns = base_characters.map((character) => ({
@@ -368,8 +397,7 @@ const AddButton =
 const CopyButton =
   Component.ba.ph20.absolute.b30.l30.pv5.fs15.ph20.pv10.c_pointer.b_rad25.sans.bg_white.button()
 const Controls =
-  Component.max_h85p.ba.b_rad5.fs12.flex.flex_column.ai_flex_start.absolute.t30.l30.bg_white.pa20.w240.of_scroll.mr30.flex_shrink0.div()
-// Component.ba.b_rad5.fs12.flex.flex_column.ai_flex_start.absolute.t30.l30.bg_white.pa20.w320.of_scroll.mr30.flex_shrink0.div()
+  Component.max_h85p.ba.b_rad5.fs12.flex.flex_column.ai_flex_start.absolute.t30.l30.bg_white.pa20.w320.of_scroll.mr30.flex_shrink0.div()
 const ParameterWrapper = Component.w100p.mt10.flex.ai_center.jc_between.div()
 const Input =
   Component.outline_button.b_rad10.ba.h20.w45.text_center.fs11.input()
@@ -378,8 +406,7 @@ const AsciiImage =
 const Line = Component.flex.div()
 const Character =
   Component.flex.ai_center.jc_center.w10.h10.flex_shrink0.text_center.span()
-const LoadedImage = Component.fit_cover.h140.w200.img()
-// const LoadedImage = Component.fit_cover.h140.w280.img()
+const LoadedImage = Component.fit_cover.h140.w100p.img()
 const Label =
   Component.blend_difference.white.fs18.w100p.h100p.absolute.flex.ai_center.jc_center.label()
 const LabelText = Component.ba.b_rad20.b_white.ph25.pv5.span()
@@ -388,9 +415,9 @@ const Toggle =
   Component.ba.c_pointer.lh15.t30.absolute.bg_white.b_rad25.fs15.flex.ai_center.jc_center.div()
 const ColorsInputs = Component.flex.ai_center.div()
 const ColorInput = Component.input()
-const Circle =
-  Component.bg_line_through.c_pointer.mr10.w15.h15.ba.b_rad50p.b_grey2.div()
+const Circle = Component.bg_line_through.mr10.w15.h15.ba.b_rad50p.b_grey2.div()
 const Letter =
   Component.no_events.fs8.absolute.w15.h15.flex.ai_center.jc_center.div()
+const Svg = Component.svg()
 
 export default Home
