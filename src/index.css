@@ -11,12 +11,12 @@
 
 @font-face {
   font-family: 'sans';
-  src: url('./px_grotesk_light.ttf');
+  src: url('./assets/fonts/px_grotesk_light.ttf');
 }
 
 @font-face {
   font-family: 'mono';
-  src: url('./ibm_plex_mono_light.ttf');
+  src: url('./assets/fonts/ibm_plex_mono_light.ttf');
 }
 
 input::-webkit-outer-spin-button,
