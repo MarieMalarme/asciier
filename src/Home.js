@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import { Component } from './utils/flags'
-import { get_random_hex_color } from './utils/toolbox'
+import { random, get_random_hex_color } from './utils/toolbox'
 
 import glitch from './assets/images/grey_gradient.jpeg'
 
@@ -89,7 +89,19 @@ export const Home = () => {
   )
 }
 
-const base_colors = [get_random_hex_color(), get_random_hex_color()]
+const color_harmonies = [
+  ['#097141', '#ffb3b3'],
+  ['#665492', '#fcff2e'],
+  ['#327071', '#ffa3a3'],
+  ['#d1ff99', '#1e00ff'],
+  ['#c09eff', '#71ff3d'],
+  ['#ffb3b3', '#097141'],
+  ['#fcff2e', '#665492'],
+  ['#ffa3a3', '#327071'],
+  ['#1e00ff', '#d1ff99'],
+  ['#71ff3d', '#c09eff'],
+]
+const base_colors = color_harmonies[random(0, color_harmonies.length - 1)]
 const base_characters = ['+', '{}', '┋', '⌾', '⌗⌗', '@', '▲', '888', '▤']
 const base_patterns = base_characters.map((character) => ({
   character,
