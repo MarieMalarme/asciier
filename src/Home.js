@@ -8,7 +8,6 @@ export const Home = ({ color, is_selected }) => {
   const [image, set_image] = useState(glitch)
   const [ascii_lines, set_ascii_lines] = useState([])
   const [copy_text, set_copy_text] = useState('Copy ASCII image')
-  const [multicolor_mode_on, set_multicolor_mode_on] = useState(false)
 
   // customizable input parameters
   const [patterns, set_patterns] = useState(base_patterns)
@@ -66,8 +65,6 @@ export const Home = ({ color, is_selected }) => {
         set_colors={set_colors}
         patterns_per_line={patterns_per_line}
         set_patterns_per_line={set_patterns_per_line}
-        multicolor_mode_on={multicolor_mode_on}
-        set_multicolor_mode_on={set_multicolor_mode_on}
         image={image}
         set_image={set_image}
         copy_text={copy_text}
@@ -82,17 +79,7 @@ export const Home = ({ color, is_selected }) => {
         {ascii_lines.map((line, index) => (
           <Line key={index}>
             {line.map((pattern, index) => (
-              <Character
-                style={
-                  {
-                    // background: multicolor_mode_on ? pattern.background : '',
-                    // color: multicolor_mode_on ? pattern.color : '',
-                  }
-                }
-                key={index}
-              >
-                {pattern.character}
-              </Character>
+              <Character key={index}>{pattern.character}</Character>
             ))}
           </Line>
         ))}
@@ -103,10 +90,8 @@ export const Home = ({ color, is_selected }) => {
 
 const ControlsPanel = (props) => {
   const { patterns_per_line, set_patterns_per_line } = props
-  const { multicolor_mode_on, set_multicolor_mode_on } = props
   const { patterns, set_patterns, ascii_lines } = props
   const { image, set_image, copy_text, set_copy_text } = props
-  const { colors, set_colors, is_selected } = props
 
   const [is_open, set_is_open] = useState(false)
 
@@ -115,7 +100,6 @@ const ControlsPanel = (props) => {
       <Toggle
         onClick={() => set_is_open(!is_open)}
         style={{ left: is_open ? 275 : 30 }}
-        // style={{ left: is_open ? 355 : 30 }}
         pv10={!is_open}
         ph20={!is_open}
         fs15={is_open}
@@ -127,7 +111,7 @@ const ControlsPanel = (props) => {
 
       {is_open && (
         <Controls>
-          <Div mb10 relative flex ai_center jc_center>
+          <Div mb10 relative flex ai_center jc_center w100p>
             <LoadedImage src={image} />
             <Label>
               <LabelText>Import image</LabelText>
@@ -143,54 +127,6 @@ const ControlsPanel = (props) => {
               />
             </Label>
           </Div>
-
-          {/*   <Div mt10 flex ai_center>
-            Multicolor mode
-            <Div
-              bb
-              b_white={multicolor_mode_on}
-              ml15
-              c_pointer
-              o30={multicolor_mode_on}
-              hover_o50={multicolor_mode_on}
-              onClick={() => set_multicolor_mode_on(false)}
-            >
-              OFF
-            </Div>
-            <Div
-              bb
-              b_white={!multicolor_mode_on}
-              ml10
-              c_pointer
-              o30={!multicolor_mode_on}
-              hover_o50={!multicolor_mode_on}
-              onClick={() => set_multicolor_mode_on(true)}
-            >
-              ON
-            </Div>
-          </Div>*/}
-
-          {/*<ColorsInputs flex w100p jc_between mb5 mt10>
-            <Div flex ai_center>
-              Background color
-              <ColorInput
-                ml10
-                type="color"
-                value={colors[0]}
-                onInput={(event) => set_colors([event.target.value, colors[1]])}
-              />
-            </Div>
-            <Div o25={multicolor_mode_on} flex ai_center>
-              Characters color
-              <ColorInput
-                ml10
-                type="color"
-                value={colors[1]}
-                disabled={multicolor_mode_on}
-                onInput={(event) => set_colors([colors[0], event.target.value])}
-              />
-            </Div>
-          </ColorsInputs>*/}
 
           <Parameter
             type="number"
@@ -215,7 +151,6 @@ const ControlsPanel = (props) => {
               remove_pattern={() =>
                 set_patterns(patterns.filter((p) => p !== pattern))
               }
-              multicolor_mode_on={multicolor_mode_on}
               set_value={(value, key) => {
                 const first_half = patterns.slice(0, index)
                 const second_half = patterns.slice(index + 1, patterns.length)
@@ -296,40 +231,6 @@ const Parameter = ({ original_value, set_value, label, ...props }) => {
         {label}
       </Div>
 
-      {/*      {is_pattern_value && (
-        <ColorsInputs o25={!props.multicolor_mode_on} relative>
-          <Letter
-            grey2={original_value.color === 'transparent'}
-            white={original_value.color !== 'transparent'}
-          >
-            A
-          </Letter>
-          <ColorInput
-            mr3
-            type="color"
-            onInput={(event) => set_value(event.target.value, 'color')}
-            value={
-              original_value.color === 'transparent'
-                ? '#ffffff'
-                : original_value.color
-            }
-          />
-          <Circle onClick={() => set_value('transparent', 'color')} />
-
-          <ColorInput
-            mr3
-            type="color"
-            onInput={(event) => set_value(event.target.value, 'background')}
-            value={
-              original_value.background === 'transparent'
-                ? '#ffffff'
-                : original_value.background
-            }
-          />
-          <Circle onClick={() => set_value('transparent', 'background')} />
-        </ColorsInputs>
-      )}*/}
-
       {remove_pattern && (
         <RemoveButton onClick={remove_pattern}>-</RemoveButton>
       )}
@@ -347,9 +248,8 @@ const get_random_hex_color = () =>
   `#${Math.floor(Math.random() * 16777215).toString(16)}`
 
 const base_colors = ['white', 'black']
-// const base_colors = [get_random_hex_color(), get_random_hex_color()]
-const ascii_characters = `~!@#$%^&*()_-+={}[]|\\'":;?/,.><o0`
-const base_characters = ['+', '{', '//', '0', '#', '@', 'A', 'mmm', '88']
+const ascii_characters = `~!@⌗$%&*()-+={}[]|\\'":/.><0⌾⌘▓▢▣▤▥▦▧▨▩▪▮▯☰☷◧◨◩◪◫⊞⊟⊠⊡〓◊◈◇◆⎔◄▲▼►⫷⫸◭◮⋖⋗┅┋║╬◉○◌◍●◐◑◒◓✦✧✢✤✲✴✶✷✸✹✺✽✾✿❁❉❋`
+const base_characters = ['+', '{}', '┋', '⌾', '⌗⌗', '@', '88', '▤', '▲']
 const base_patterns = base_characters.map((character) => ({
   character,
   color: get_random_hex_color(),
@@ -369,7 +269,6 @@ const CopyButton =
   Component.ba.ph20.absolute.b30.l30.pv5.fs15.ph20.pv10.c_pointer.b_rad25.sans.bg_white.button()
 const Controls =
   Component.max_h85p.ba.b_rad5.fs12.flex.flex_column.ai_flex_start.absolute.t30.l30.bg_white.pa20.w240.of_scroll.mr30.flex_shrink0.div()
-// Component.ba.b_rad5.fs12.flex.flex_column.ai_flex_start.absolute.t30.l30.bg_white.pa20.w320.of_scroll.mr30.flex_shrink0.div()
 const ParameterWrapper = Component.w100p.mt10.flex.ai_center.jc_between.div()
 const Input =
   Component.outline_button.b_rad10.ba.h20.w45.text_center.fs11.input()
@@ -378,19 +277,12 @@ const AsciiImage =
 const Line = Component.flex.div()
 const Character =
   Component.flex.ai_center.jc_center.w10.h10.flex_shrink0.text_center.span()
-const LoadedImage = Component.fit_cover.h140.w200.img()
-// const LoadedImage = Component.fit_cover.h140.w280.img()
+const LoadedImage = Component.fit_cover.h140.w100p.img()
 const Label =
   Component.blend_difference.white.fs18.w100p.h100p.absolute.flex.ai_center.jc_center.label()
 const LabelText = Component.ba.b_rad20.b_white.ph25.pv5.span()
 const UploadInput = Component.o0.w100p.h100p.absolute.c_pointer.input()
 const Toggle =
   Component.ba.c_pointer.lh15.t30.absolute.bg_white.b_rad25.fs15.flex.ai_center.jc_center.div()
-const ColorsInputs = Component.flex.ai_center.div()
-const ColorInput = Component.input()
-const Circle =
-  Component.bg_line_through.c_pointer.mr10.w15.h15.ba.b_rad50p.b_grey2.div()
-const Letter =
-  Component.no_events.fs8.absolute.w15.h15.flex.ai_center.jc_center.div()
 
 export default Home
