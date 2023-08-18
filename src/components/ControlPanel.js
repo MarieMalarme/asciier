@@ -12,7 +12,10 @@ export const ControlPanel = (props) => {
     <Fragment>
       <Toggle
         onClick={() => set_is_open(!is_open)}
-        style={{ left: is_open ? 355 : 30 }}
+        l355={is_open}
+        l310__xs={is_open}
+        l30={!is_open}
+        l15__xs={!is_open}
         pv10={!is_open}
         ph20={!is_open}
         fs15={is_open}
@@ -42,7 +45,7 @@ export const ControlPanel = (props) => {
 }
 
 const Toggle =
-  Component.ba.c_pointer.lh15.t30.absolute.bg_white.b_rad25.fs15.flex.ai_center.jc_center.div()
+  Component.ba.c_pointer.lh15.t30.t15__xs.absolute.bg_white.b_rad25.fs15.flex.ai_center.jc_center.div()
 
 const CopyButton =
-  Component.ba.ph20.absolute.b30.l30.pv5.fs15.ph20.pv10.c_pointer.b_rad25.sans.bg_white.button()
+  Component.ba.ph20.absolute.b30.b15__xs.l30.l15__xs.pv5.fs15.ph20.pv10.c_pointer.b_rad25.sans.bg_white.button()

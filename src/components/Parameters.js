@@ -265,7 +265,7 @@ const PatternColor = ({ type, value, set_value, multicolor_mode_on }) => (
 )
 
 const Wrapper =
-  Component.max_h85p.ba.b_rad5.fs12.flex.flex_column.ai_flex_start.absolute.t30.l30.bg_white.pa20.w320.of_scroll.mr30.flex_shrink0.div()
+  Component.scale__xs.max_h85p.ba.b_rad5.fs12.flex.flex_column.ai_flex_start.absolute.t30.t15__xs.l30.l15__xs.bg_white.pa20.w320.of_scroll.mr30.flex_shrink0.div()
 
 const ModeOption = Component.bb.ml15.c_pointer.div()
 const Svg = Component.svg()
