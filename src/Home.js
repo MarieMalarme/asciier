@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { Component } from './utils/flags'
 import { random, get_random_hex_color } from './utils/toolbox'
 
-import glitch from './assets/images/grey_gradient.jpeg'
+import glitch from './assets/images/noise.jpg'
 
 import { AsciiImage } from './components/AsciiImage'
 import { ControlPanel } from './components/ControlPanel'
