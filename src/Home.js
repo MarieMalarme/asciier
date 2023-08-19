@@ -13,7 +13,7 @@ export const Home = () => {
   const [wrapper, set_wrapper] = useState(null)
   const [image, set_image] = useState(glitch)
   const [ascii_lines, set_ascii_lines] = useState([])
-  const [multicolor_mode_on, set_multicolor_mode_on] = useState(false)
+  const [multicolor_mode_on, set_multicolor_mode_on] = useState(true)
 
   // customizable input parameters
   const [patterns, set_patterns] = useState(base_patterns)
